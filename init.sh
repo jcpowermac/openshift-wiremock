@@ -7,7 +7,7 @@ java -jar /opt/wiremock/wiremock.jar \
      --root-dir /var/lib/wiremock \
      --proxy-all="https://connect.redhat.com" \
      --bind-address="0.0.0.0" \
-     --record-mappins \
+     --record-mappings \
      --verbose &
 
 sleep 10
