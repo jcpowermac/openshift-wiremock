@@ -1,5 +1,7 @@
 FROM centos
 
+ENV HOME=/opt/wiremock
+
 RUN yum install -y epel-release java-1.8.0-openjdk && \
     yum install -y python2-httpie && \
     yum clean all && \
