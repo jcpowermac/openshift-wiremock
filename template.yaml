@@ -1,0 +1,182 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: wiremock
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: wiremock
+    name: wiremock
+  spec:
+    replicas: 1
+    selector:
+      app: wiremock
+      deploymentconfig: wiremock
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: wiremock
+          deploymentconfig: wiremock
+        annotations:
+          pod.beta.kubernetes.io/init-containers: '[
+          {
+            "name": "wiremock-init",
+            "image": "172.30.10.223:5000/wiremock/wiremock",
+            "imagePullPolicy": "Always",
+            "env": [
+              {
+                "name": "PROJECT_ID",
+                "value": "p17633880910e488f5949aab3ad76cd4317542a7a06"
+              },
+              {
+                "name": "DIGEST",
+                "value": "sha256:144c7752a692dbcfd32339a9c9acd1e56d03de9e1aa617385a630824a4518456"
+              },
+              {
+                "name": "SECRET",
+                "valueFrom": {
+                  "secretRef": {
+                    "name": "ContainerZone",
+                    "key": "secret"
+                    }
+                    }
+              }
+
+            ]
+            "command": ["/opt/wiremock/init.sh"],
+            "volumeMounts": [
+              {
+                "name": "wiremock",
+                "mountPath":  "/var/lib/wiremock"
+              }
+            ]
+          }
+        ]'
+      spec:
+        containers:
+        - image: ''
+          imagePullPolicy: Always
+          name: wiremock
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+            - name: wiremock
+              mountPath: "/var/lib/wiremock"
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+          - name: wiremock
+            emptyDir: {}
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - wiremock
+        from:
+          kind: ImageStreamTag
+          name: wiremock:latest
+          namespace: wiremock
+      type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: wiremock
+    name: wiremock
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: wiremock
+      deploymentconfig: wiremock
+    sessionAffinity: None
+    type: ClusterIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: wiremock
+    name: wiremock-init
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 30000
+    selector:
+      app: wiremock
+      deploymentconfig: wiremock
+    sessionAffinity: None
+    type: NodePort
+
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: wiremock
+    name: wiremock
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: wiremock:latest
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://github.com/jcpowermac/openshift-wiremock
+      type: Git
+    strategy:
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: centos:latest
+      type: Docker
+    triggers:
+    - imageChange: {}
+      type: ImageChange
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: wiremock
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: centos
+
+- apiVersion: v1
+  kind: ImageStreamTag
+  metadata:
+    creationTimestamp: null
+    name: centos:latest
+  tag:
+    annotations: null
+    from:
+      kind: DockerImage
+      name: docker.io/library/centos:latest
+    name: latest
+    referencePolicy:
+      type: Source
