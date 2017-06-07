@@ -48,14 +48,14 @@ objects:
               {
                 "name": "SECRET",
                 "valueFrom": {
-                  "secretRef": {
-                    "name": "ContainerZone",
+                  "secretKeyRef": {
+                    "name": "containerzone",
                     "key": "secret"
                     }
                     }
               }
 
-            ]
+            ],
             "command": ["/opt/wiremock/init.sh"],
             "volumeMounts": [
               {
