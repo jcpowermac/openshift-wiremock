@@ -2,7 +2,7 @@ FROM centos
 
 ENV HOME=/opt/wiremock
 
-RUN yum install -y epel-release java-1.8.0-openjdk && \
+RUN yum install -y epel-release java-1.8.0-openjdk vim && \
     yum install -y python2-pip && \
     pip install -U pip && \
     pip install -U setuptools && \
