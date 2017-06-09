@@ -173,3 +173,18 @@ objects:
       name: wiremock
       weight: 100
     wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: wiremock-ssl
+  spec:
+    host: wiremock-ssl.router.default.svc.cluster.local
+    port:
+      targetPort: 8443-tcp
+    tls:
+      termination: passthrough
+    to:
+      kind: Service
+      name: wiremock
+      weight: 100
+    wildcardPolicy: None
