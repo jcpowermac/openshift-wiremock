@@ -17,5 +17,5 @@ RUN yum install -y centos-release-openshift-origin epel-release java-1.8.0-openj
 COPY init.sh /opt/wiremock
 
 USER 10001
-EXPOSE 8080
-ENTRYPOINT java -jar /opt/wiremock/wiremock.jar --bind-address 0.0.0.0 --root-dir /var/lib/wiremock --verbose
+EXPOSE 8080 8443
+ENTRYPOINT java -jar /opt/wiremock/wiremock.jar --https-port 8443 --bind-address 0.0.0.0 --root-dir /var/lib/wiremock --verbose

@@ -26,12 +26,16 @@ java -jar /opt/wiremock/wiremock.jar \
      --root-dir /var/lib/wiremock \
      --proxy-all="https://api.rhc4tp.openshift.com" \
      --bind-address="0.0.0.0" \
+     --preserve-host-header \
+     --https-port 8443 \
+     --match-headers="Accept,Content-Type,Authorization" \
      --record-mappings \
      --verbose &
 
 sleep 5
 oc login --token=${SECRET} http://localhost:8080
-oc describe istag
+oc describe istag starter-arbitrary-uid:1.0
+oc get istag starter-arbitrary-uid:1.0
 
 sleep 2
 http --pretty=all --traceback --json POST :8080/__admin/shutdown

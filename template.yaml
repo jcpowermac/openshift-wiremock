@@ -66,6 +66,8 @@ objects:
           ports:
           - containerPort: 8080
             protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
           resources: {}
           terminationMessagePath: /dev/termination-log
           volumeMounts:
@@ -102,6 +104,10 @@ objects:
       port: 8080
       protocol: TCP
       targetPort: 8080
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
     selector:
       app: wiremock
       deploymentconfig: wiremock
