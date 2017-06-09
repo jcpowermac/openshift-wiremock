@@ -21,4 +21,20 @@ http --ignore-stdin --pretty=all --traceback --json POST :8080/api/container/sca
 sleep 2
 http --pretty=all --traceback --json POST :8080/__admin/shutdown
 sleep 3
+
+java -jar /opt/wiremock/wiremock.jar \
+     --root-dir /var/lib/wiremock \
+     --proxy-all="https://api.rhc4tp.openshift.com" \
+     --bind-address="0.0.0.0" \
+     --record-mappings \
+     --verbose &
+
+sleep 5
+oc login --token=${SECRET} http://localhost:8080
+oc describe istag
+
+sleep 2
+http --pretty=all --traceback --json POST :8080/__admin/shutdown
+sleep 3
+
 sed -i 's/url/urlPath/g' /var/lib/wiremock/mappings/*

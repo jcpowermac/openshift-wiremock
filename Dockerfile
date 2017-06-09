@@ -2,8 +2,8 @@ FROM centos
 
 ENV HOME=/opt/wiremock
 
-RUN yum install -y epel-release java-1.8.0-openjdk vim && \
-    yum install -y python2-pip && \
+RUN yum install -y centos-release-openshift-origin epel-release java-1.8.0-openjdk vim && \
+    yum install -y python2-pip origin-clients && \
     pip install -U pip && \
     pip install -U setuptools && \
     pip install httpie && \
