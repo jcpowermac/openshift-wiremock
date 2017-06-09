@@ -33,10 +33,10 @@ java -jar /opt/wiremock/wiremock.jar \
      --verbose &
 
 sleep 5
-oc --config='/opt/wiremock/.kube/config' login --token=${SECRET} --insecure-skip-tls-verify localhost:8443
-oc --config='/opt/wiremock/.kube/config' project ${PROJECT_ID}
-oc --config='/opt/wiremock/.kube/config' describe istag starter-arbitrary-uid:1.0
-oc --config='/opt/wiremock/.kube/config' get istag starter-arbitrary-uid:1.0
+oc --config='/opt/wiremock/.kube/config' --namespace=${PROJECT_ID} login --token=${SECRET} --insecure-skip-tls-verify localhost:8443
+oc --config='/opt/wiremock/.kube/config' --namespace=${PROJECT_ID} project ${PROJECT_ID}
+oc --config='/opt/wiremock/.kube/config' --namespace=${PROJECT_ID} describe istag starter-arbitrary-uid:1.0
+oc --config='/opt/wiremock/.kube/config' --namespace=${PROJECT_ID} get istag starter-arbitrary-uid:1.0
 
 sleep 2
 http --pretty=all --traceback --json POST :8080/__admin/shutdown
