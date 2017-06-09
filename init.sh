@@ -33,7 +33,7 @@ java -jar /opt/wiremock/wiremock.jar \
      --verbose &
 
 sleep 5
-oc login --token=${SECRET} http://localhost:8080
+oc login --token=${SECRET} --insecure-skip-tls-verify localhost:8443
 oc describe istag starter-arbitrary-uid:1.0
 oc get istag starter-arbitrary-uid:1.0
 
