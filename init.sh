@@ -43,3 +43,7 @@ http --pretty=all --traceback --json POST :8080/__admin/shutdown
 sleep 3
 
 sed -i 's/url/urlPath/g' /var/lib/wiremock/mappings/*
+
+git clone https://github.com/RHsyseng/openshift-pipeline-library /tmp
+cp /tmp/tests/jobs/__files/* /var/lib/wiremock/__files/
+
