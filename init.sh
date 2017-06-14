@@ -47,6 +47,7 @@ sed -i 's/url/urlPath/g' /var/lib/wiremock/mappings/*
 git config --global user.email "nobody@nowhere.com"
 git config --global user.name "$(id -u)"
 
+git clone https://github.com/jcpowermac/openshift-pipeline-library /tmp/openshift-pipeline-library -b posturl_updates
 
-git clone https://github.com/RHsyseng/openshift-pipeline-library /tmp/openshift-pipeline-library
+#git clone https://github.com/RHsyseng/openshift-pipeline-library /tmp/openshift-pipeline-library
 cp /tmp/openshift-pipeline-library/tests/jobs/__files/* /var/lib/wiremock/__files/
